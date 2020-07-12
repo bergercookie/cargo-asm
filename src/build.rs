@@ -108,10 +108,12 @@ pub fn project() -> Vec<::std::path::PathBuf> {
     }
 
     debug!("starting cargo build... {:?}", cargo_build);
-    let error_msg = "cargo build failed";
-    process::exec(&mut cargo_build, error_msg, opts.debug_mode())
-        .expect(error_msg);
-    debug!("cargo build finished...");
+    let mut child = cargo_build.spawn().expect("Failed to spawn process");
+    let success = child.wait().expect("Didn't see process running").success();
+    if !success {
+        panic!("Execution failed - Run cargo-asm in debug to see more info");
+    }
+    debug!("cargo build finished successfully.");
 
     let ext = match *opts.read() {
         crate::options::Options::Asm(_) => "s",

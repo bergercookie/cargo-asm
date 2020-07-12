@@ -4,3 +4,5 @@ target/
 [._]*.sw?
 [._]sw?
 *~
+
+cargo-asm-test/lib_crate/Cargo.lock
